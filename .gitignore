@@ -1,0 +1,9 @@
+build
+dist
+backup
+__pycache__
+aplicação.txt
+geraExecutável.bat
+*.xml
+app_sketch_one.py
+
