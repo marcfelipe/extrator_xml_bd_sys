@@ -17,6 +17,20 @@ def generate_list_to_process(server_name, db_path, initial_date, final_date):
   con.close()
   return result_set
 
+def generate_list_to_export(server_name, db_path, initial_date, final_date):
+  sql_generate_list = """select tx.trnseq,tx.trndat,tx.cxanum,trnxml from transacao_xmlnota tx 
+  left join transacao t on (tx.trnseq=t.trnseq and tx.cxanum=t.cxanum and tx.trndat=t.trndat) 
+  where t.trnimpcod='99' and trntip='1'
+  and tx.trndat>=? and tx.trndat<=? 
+  and trnsta not in ('PE','ER','RJ')"""
+
+  con = conectar_db(server_name, db_path)
+  cursor = con.cursor()
+  cursor.execute(sql_generate_list,[initial_date, final_date])
+  result_set = cursor.fetchall()
+  con.close()
+  return result_set
+
 
 source_db = 'c:/syspdv/syspdv_srv_E_n_LIMA_070422.fdb'
 
@@ -28,6 +42,10 @@ source_db = 'c:/syspdv/syspdv_srv_E_n_LIMA_070422.fdb'
 #   print('length from test is:', str(len(test)))
 #for line in test:
 #  print('sequencial:', line[0], 'cxanum:', line[2])
+
+def decompress_db_content(db_content):
+  xml_content = zlib.decompress(db_content)
+  return xml_content
 
 def parse_xml_db(db_content):
   xml_content = zlib.decompress(db_content)

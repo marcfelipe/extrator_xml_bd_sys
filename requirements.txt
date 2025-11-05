@@ -1,2 +1,2 @@
-fdb==1.6.1
+fdb
 xmltodict==0.11.0
